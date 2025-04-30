@@ -66,7 +66,7 @@ openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key \
   -CAcreateserial -out server.crt -days 365 -sha256
 ```
 IMPORTANT: Put the CN (Common Name) as your server's (On which the Mosquitto Broker is running) hostname.
-For Example: If you are using Raspberry Pi, then chech it's hostname and put that in CN field. 
+For Example: If you are using Raspberry Pi, then check it's hostname and put that in CN field. 
 Refer to my other repo for how to configure hostname.
 
 ### 1.3 Generate Client Certificate (for ESP32)
