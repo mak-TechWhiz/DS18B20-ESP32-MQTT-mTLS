@@ -48,7 +48,7 @@ openssl req -x509 -new -nodes -key ca.key \
   -subj "/C=US/ST=State/L=City/O=Org/CN=MyMQTT-CA" \
   -out ca.crt
 ```
-This step is very critical as it will save you from hours of hassle.
+This step i.e. 1.2 is very critical as it will save you from hours of hassle.
 
 ### 1.2 Generate Server Certificate
 
