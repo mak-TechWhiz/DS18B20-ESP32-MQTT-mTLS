@@ -48,6 +48,7 @@ openssl req -x509 -new -nodes -key ca.key \
   -subj "/C=US/ST=State/L=City/O=Org/CN=MyMQTT-CA" \
   -out ca.crt
 ```
+This step is very critical as it will save you from hours of hassle.
 
 ### 1.2 Generate Server Certificate
 
@@ -64,6 +65,9 @@ openssl req -new -key server.key \
 openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key \
   -CAcreateserial -out server.crt -days 365 -sha256
 ```
+IMPORTANT: Put the CN (Common Name) as your server's (On which the Mosquitto Broker is running) hostname.
+For Example: If you are using Raspberry Pi, then chech it's hostname and put that in CN field. 
+Refer to my other repo for how to configure hostname.
 
 ### 1.3 Generate Client Certificate (for ESP32)
 
@@ -102,16 +106,6 @@ keyfile  /path/to/server.key
 # Require client to present a valid cert
 require_certificate true
 use_identity_as_username true
-
-# Optional: control allowed CNs
-#acl_file /etc/mosquitto/acl
-
-# Logging
-log_dest syslog
-log_dest stdout
-log_type error
-log_type warning
-log_type notice
 ```
 
 Reload or restart Mosquitto:
