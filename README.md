@@ -122,7 +122,7 @@ Use `mosquitto_sub`/`mosquitto_pub` to test:
 From your machine on the same network do:
 
 ```bash
-mosquitto_sub -h your.broker.address -p 8883 \
+mosquitto_sub -h your_broker_hostname -p 8883 \
   --cafile ca.crt --cert client.crt --key client.key \
   -t sensors/temperature -v
 ```
