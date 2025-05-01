@@ -131,7 +131,7 @@ mosquitto_sub -h your_broker_hostname -p 8883 \
 
 ## 3. ESP32 Firmware Setup
 
-### 3.1 Folder Layout
+### 3.1 Suggested Folder Layout
 ```
 DS18B20-ESP32-MQTT-mTLS/
 ├── src/
