@@ -171,7 +171,7 @@ Edit `main.ino`:
   mqttClient.connect("esp32-client");
   ```
 
-Refer to [examples/main.ino](src/main.ino) for full code.
+Refer to [Temperature_MQTT_mTLS.ino](Temperature_MQTT_mTLS.ino) for full code.
 
 ---
 
