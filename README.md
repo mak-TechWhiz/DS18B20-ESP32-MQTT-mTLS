@@ -25,10 +25,9 @@ This guide covers:
    - DS18B20 one-wire temperature sensor + 4.7 kΩ pull-up resistor
    - Breadboard & jumper wires
 2. **Software**
-   - Arduino IDE or PlatformIO
+   - Arduino IDE 
    - OpenSSL (v1.1+)
    - Mosquitto MQTT broker (v2.x)
-   - Git
 
 ---
 
@@ -91,12 +90,11 @@ openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key \
 
 ## 2. Configure Mosquitto Broker
 
-Edit your `mosquitto.conf` (typically in `/etc/mosquitto/mosquitto.conf` or `/etc/mosquitto/conf.d/`):
+Edit your `mosquitto.conf` (typically in `/etc/mosquitto/mosquitto.conf`):
 
 ```conf
 # Listener & protocol
 listener 8883
-protocol mqtt
 
 # CA and server certificates
 cafile /path/to/ca.crt
@@ -106,6 +104,7 @@ keyfile  /path/to/server.key
 # Require client to present a valid cert
 require_certificate true
 use_identity_as_username true
+allow_anonymous false
 ```
 
 Reload or restart Mosquitto:
@@ -113,8 +112,14 @@ Reload or restart Mosquitto:
 ```bash
 sudo systemctl restart mosquitto
 ```
+If you are using docker then:
+```bash
+sudo docker your_broker_container_name restart
+```
 
 Use `mosquitto_sub`/`mosquitto_pub` to test:
+
+From your machine on the same network do:
 
 ```bash
 mosquitto_sub -h your.broker.address -p 8883 \
@@ -131,22 +136,17 @@ mosquitto_sub -h your.broker.address -p 8883 \
 DS18B20-ESP32-MQTT-mTLS/
 ├── src/
 │   └── main.ino       # your Arduino sketch
-├── config/
-│   └── mqtt_config.h  # renamed from mqtt_config.example
 ├── data/
 │   └── ca.crt         # copy CA cert here
 │   └── client.crt     # copy client cert
 │   └── client.key     # copy client key (git-ignored)
-├── platformio.ini     # or .ino project files
 └── README.md
 ```
 
-### 3.2 `mqtt_config.h`
+### 3.2 `main.ino`
 
-Copy and edit `config/mqtt_config.example` → `config/mqtt_config.h`:
+Edit `main.ino`:
 ```cpp
-#ifndef MQTT_CONFIG_H
-#define MQTT_CONFIG_H
 
 #define WIFI_SSID    "YOUR_SSID"
 #define WIFI_PASS    "YOUR_PASS"
@@ -161,7 +161,7 @@ Copy and edit `config/mqtt_config.example` → `config/mqtt_config.h`:
 
 - Include certificate files via SPIFFS or embed in code using `WiFiClientSecure`.
 - Initialize OneWire & DallasTemperature to read DS18B20.
-- Use `PubSubClient` (or `AsyncMQTTClient`) over `WiFiClientSecure`.
+- Use `PubSubClient` over `WiFiClientSecure`.
 - Connect to broker with:
   ```cpp
   secureClient.setCACert(ca_crt);
@@ -192,9 +192,8 @@ Refer to [examples/main.ino](src/main.ino) for full code.
 
 ## Troubleshooting
 
-- **TLS handshake errors**: verify CNs match, file paths, and clock sync.  
+- **TLS handshake errors**: verify CNs match and file paths  
 - **Connection timeout**: ensure broker is listening on 8883 and firewall is open.  
-- **Bad MQTT credentials**: check `use_identity_as_username` in Mosquitto and matching client CN.
 
 ---
 
